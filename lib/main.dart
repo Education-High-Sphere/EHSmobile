@@ -20,6 +20,7 @@ class EHSMobileApp extends StatelessWidget {
 			routes: {
 				'/login': (ctx) => const TelaLogin(),
 				'/cadastro': (ctx) => const TelaCadastro(),
+        '/home': (ctx) => const TelaHome(),
 			},
 		);
 	}
