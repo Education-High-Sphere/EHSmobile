@@ -1,27 +1,30 @@
 import 'package:flutter/material.dart';
 import 'Telas/login.dart';
 import 'Telas/cadastro.dart';
+import 'Telas/home.dart';
 
 void main() => runApp(const EHSMobileApp());
 
 class EHSMobileApp extends StatelessWidget {
-	const EHSMobileApp({super.key});
+  const EHSMobileApp({super.key});
 
-	@override
-	Widget build(BuildContext context) {
-		return MaterialApp(
-			debugShowCheckedModeBanner: false,
-			title: 'EHS Mobile',
-			theme: ThemeData(
-				brightness: Brightness.dark,
-				primarySwatch: Colors.blue,
-			),
-			initialRoute: '/login',
-			routes: {
-				'/login': (ctx) => const TelaLogin(),
-				'/cadastro': (ctx) => const TelaCadastro(),
-        '/home': (ctx) => const TelaHome(),
-			},
-		);
-	}
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'EHS Mobile',
+      // Você pode definir um tema padrão aqui se quiser, 
+      // mas a TelaHome já tem as cores definidas nela mesma.
+      theme: ThemeData(
+        brightness: Brightness.light, // Mudei para Light para bater com o design azul/branco
+        primarySwatch: Colors.blue,
+      ),
+      initialRoute: '/login',
+      routes: {
+        '/login': (ctx) => const TelaLogin(),
+        '/cadastro': (ctx) => const TelaCadastro(),
+        '/home': (ctx) => const TelaHome(), // A rota já estava certa, agora ela encontra a classe
+      },
+    );
+  }
 }

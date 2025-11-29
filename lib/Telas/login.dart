@@ -117,7 +117,8 @@ class _TelaLoginState extends State<TelaLogin> {
                 // --- 5. Botão Entrar ---
                 ElevatedButton(
                   onPressed: () {
-                    // Lógica de login aqui
+                    // Lógica de verificação de login aqui
+                    Navigator.pushReplacementNamed(context, '/home');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: buttonBlue,
