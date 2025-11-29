@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import 'Telas/login.dart';
 import 'Telas/cadastro.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'Telas/home.dart';
 
-void main() => runApp(const EHSMobileApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
+  await Supabase.initialize(
+    url: 'https://exemplo-falso.supabase.co',
+    anonKey: 'SUA_ANON_KEY_DO_SUPABASE',
+  );
+
+  runApp(const EHSMobileApp());
+}
 class EHSMobileApp extends StatelessWidget {
   const EHSMobileApp({super.key});
 

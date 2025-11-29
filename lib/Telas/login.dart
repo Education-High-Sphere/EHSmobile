@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/auth_service.dart';
 
 class TelaLogin extends StatefulWidget {
   const TelaLogin({super.key});
@@ -12,6 +13,9 @@ class _TelaLoginState extends State<TelaLogin> {
   static const Color buttonBlue = Color(0xFF3B82F6); // Cor do botão Entrar
   static const Color textFieldFill = Color(0xFFFFFFFF); // Fundo branco dos campos
 
+  final AuthService _authService = AuthService(); // Instancia o serviço
+  bool _isLoading = false; // Controla o estado de carregamento
+
   final TextEditingController _userController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
@@ -22,6 +26,52 @@ class _TelaLoginState extends State<TelaLogin> {
     _passwordController.dispose();
     super.dispose();
   }
+
+
+  Future<void> _fazerLogin() async {
+
+  FocusScope.of(context).unfocus();
+  
+  if (_userController.text.trim().isEmpty || _passwordController.text.trim().isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Por favor, preencha email e senha.'),
+        backgroundColor: Colors.orange, // Laranja para aviso
+      ),
+    );
+    return; // Para a execução aqui
+  }
+  
+  // 1. Ativa o loading e redesenha a tela
+  setState(() => _isLoading = true);
+
+  // 2. Chama o Supabase (através do seu serviço)
+  final String? erro = await _authService.login(
+    _userController.text.trim(),
+    _passwordController.text.trim(),
+  );
+
+  // 3. Desativa o loading
+  setState(() => _isLoading = false);
+
+  // 4. Verifica o resultado
+  if (erro == null) {
+    // Sucesso! (Verifica se o widget ainda existe antes de navegar)
+    if (mounted) {
+      Navigator.pushReplacementNamed(context, '/home');
+    }
+  } else {
+    // Erro! Mostra um aviso vermelho
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(erro),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -116,25 +166,37 @@ class _TelaLoginState extends State<TelaLogin> {
 
                 // --- 5. Botão Entrar ---
                 ElevatedButton(
-                  onPressed: () {
-                    // Lógica de verificação de login aqui
-                    Navigator.pushReplacementNamed(context, '/home');
-                  },
+                  // Se estiver carregando, o botão fica desabilitado (null)
+                  onPressed: _isLoading ? null : _fazerLogin, 
+                  
                   style: ElevatedButton.styleFrom(
                     backgroundColor: buttonBlue,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
+                    // Cor do spinner quando desabilitado
+                    disabledBackgroundColor: buttonBlue.withOpacity(0.6), 
                   ),
-                  child: const Text(
-                    'Entrar',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  
+                  // Aqui está a mágica visual:
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text( // O texto original que você tinha
+                          'Entrar',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                 ),
                 const SizedBox(height: 16),
 
