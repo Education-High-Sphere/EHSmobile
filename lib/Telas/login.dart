@@ -1,12 +1,27 @@
 import 'package:flutter/material.dart';
 
-class TelaLogin extends StatelessWidget {
+class TelaLogin extends StatefulWidget {
   const TelaLogin({super.key});
 
-  // Definição das cores para fácil manutenção
+  @override
+  State<TelaLogin> createState() => _TelaLoginState();
+}
+
+class _TelaLoginState extends State<TelaLogin> {
   static const Color darkBlue = Color(0xFF1E2A3B); // Cor de fundo aproximada
   static const Color buttonBlue = Color(0xFF3B82F6); // Cor do botão Entrar
   static const Color textFieldFill = Color(0xFFFFFFFF); // Fundo branco dos campos
+
+  final TextEditingController _userController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _obscurePassword = true;
+
+  @override
+  void dispose() {
+    _userController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +72,7 @@ class TelaLogin extends StatelessWidget {
 
                 // --- 3. Campo de Usuário ---
                 TextField(
+                  controller: _userController,
                   decoration: InputDecoration(
                     hintText: 'Nome de usuário, email ou celular',
                     hintStyle: const TextStyle(color: Colors.black54),
@@ -74,12 +90,19 @@ class TelaLogin extends StatelessWidget {
 
                 // --- 4. Campo de Senha ---
                 TextField(
-                  obscureText: true, // Esconde o texto da senha
+                  controller: _passwordController,
+                  obscureText: _obscurePassword, // Esconde/mostra o texto da senha
                   decoration: InputDecoration(
                     hintText: 'Senha',
                     hintStyle: const TextStyle(color: Colors.black54),
                     prefixIcon: const Icon(Icons.lock_outline, color: Colors.black54),
-                    suffixIcon: const Icon(Icons.visibility_outlined, color: Colors.black54),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                        color: Colors.black54,
+                      ),
+                      onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                    ),
                     filled: true,
                     fillColor: textFieldFill,
                     border: OutlineInputBorder(
