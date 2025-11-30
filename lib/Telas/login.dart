@@ -11,7 +11,9 @@ class TelaLogin extends StatefulWidget {
 class _TelaLoginState extends State<TelaLogin> {
   static const Color darkBlue = Color(0xFF1E2A3B); // Cor de fundo aproximada
   static const Color buttonBlue = Color(0xFF3B82F6); // Cor do botão Entrar
-  static const Color textFieldFill = Color(0xFFFFFFFF); // Fundo branco dos campos
+  static const Color textFieldFill = Color(
+    0xFFFFFFFF,
+  ); // Fundo branco dos campos
 
   final AuthService _authService = AuthService(); // Instancia o serviço
   bool _isLoading = false; // Controla o estado de carregamento
@@ -27,51 +29,47 @@ class _TelaLoginState extends State<TelaLogin> {
     super.dispose();
   }
 
-
   Future<void> _fazerLogin() async {
+    FocusScope.of(context).unfocus();
 
-  FocusScope.of(context).unfocus();
-  
-  if (_userController.text.trim().isEmpty || _passwordController.text.trim().isEmpty) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Por favor, preencha email e senha.'),
-        backgroundColor: Colors.orange, // Laranja para aviso
-      ),
-    );
-    return; // Para a execução aqui
-  }
-  
-  // 1. Ativa o loading e redesenha a tela
-  setState(() => _isLoading = true);
-
-  // 2. Chama o Supabase (através do seu serviço)
-  final String? erro = await _authService.login(
-    _userController.text.trim(),
-    _passwordController.text.trim(),
-  );
-
-  // 3. Desativa o loading
-  setState(() => _isLoading = false);
-
-  // 4. Verifica o resultado
-  if (erro == null) {
-    // Sucesso! (Verifica se o widget ainda existe antes de navegar)
-    if (mounted) {
-      Navigator.pushReplacementNamed(context, '/home');
-    }
-  } else {
-    // Erro! Mostra um aviso vermelho
-    if (mounted) {
+    if (_userController.text.trim().isEmpty ||
+        _passwordController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(erro),
-          backgroundColor: Colors.red,
+        const SnackBar(
+          content: Text('Por favor, preencha email e senha.'),
+          backgroundColor: Colors.orange, // Laranja para aviso
         ),
       );
+      return; // Para a execução aqui
+    }
+
+    // 1. Ativa o loading e redesenha a tela
+    setState(() => _isLoading = true);
+
+    // 2. Chama o Supabase (através do seu serviço)
+    final String? erro = await _authService.login(
+      _userController.text.trim(),
+      _passwordController.text.trim(),
+    );
+
+    // 3. Desativa o loading
+    setState(() => _isLoading = false);
+
+    // 4. Verifica o resultado
+    if (erro == null) {
+      // Sucesso! (Verifica se o widget ainda existe antes de navegar)
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    } else {
+      // Erro! Mostra um aviso vermelho
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(erro), backgroundColor: Colors.red),
+        );
+      }
     }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +81,8 @@ class _TelaLoginState extends State<TelaLogin> {
           child: Padding(
             padding: const EdgeInsets.all(32.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch, // Estica os botões
+              crossAxisAlignment:
+                  CrossAxisAlignment.stretch, // Estica os botões
               children: [
                 const SizedBox(height: 60),
 
@@ -113,10 +112,7 @@ class _TelaLoginState extends State<TelaLogin> {
                 const Text(
                   'Acesse sua conta',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(color: Colors.white70, fontSize: 16),
                 ),
                 const SizedBox(height: 40),
 
@@ -126,7 +122,10 @@ class _TelaLoginState extends State<TelaLogin> {
                   decoration: InputDecoration(
                     hintText: 'Nome de usuário, email ou celular',
                     hintStyle: const TextStyle(color: Colors.black54),
-                    prefixIcon: const Icon(Icons.email_outlined, color: Colors.black54),
+                    prefixIcon: const Icon(
+                      Icons.email_outlined,
+                      color: Colors.black54,
+                    ),
                     filled: true,
                     fillColor: textFieldFill,
                     border: OutlineInputBorder(
@@ -134,24 +133,33 @@ class _TelaLoginState extends State<TelaLogin> {
                       borderSide: BorderSide.none, // Sem borda
                     ),
                   ),
-                  style: const TextStyle(color: Colors.black), // Cor do texto digitado
+                  style: const TextStyle(
+                    color: Colors.black,
+                  ), // Cor do texto digitado
                 ),
                 const SizedBox(height: 16),
 
                 // --- 4. Campo de Senha ---
                 TextField(
                   controller: _passwordController,
-                  obscureText: _obscurePassword, // Esconde/mostra o texto da senha
+                  obscureText:
+                      _obscurePassword, // Esconde/mostra o texto da senha
                   decoration: InputDecoration(
                     hintText: 'Senha',
                     hintStyle: const TextStyle(color: Colors.black54),
-                    prefixIcon: const Icon(Icons.lock_outline, color: Colors.black54),
+                    prefixIcon: const Icon(
+                      Icons.lock_outline,
+                      color: Colors.black54,
+                    ),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                        _obscurePassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
                         color: Colors.black54,
                       ),
-                      onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                      onPressed: () =>
+                          setState(() => _obscurePassword = !_obscurePassword),
                     ),
                     filled: true,
                     fillColor: textFieldFill,
@@ -167,8 +175,8 @@ class _TelaLoginState extends State<TelaLogin> {
                 // --- 5. Botão Entrar ---
                 ElevatedButton(
                   // Se estiver carregando, o botão fica desabilitado (null)
-                  onPressed: _isLoading ? null : _fazerLogin, 
-                  
+                  onPressed: _isLoading ? null : _fazerLogin,
+
                   style: ElevatedButton.styleFrom(
                     backgroundColor: buttonBlue,
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -176,9 +184,9 @@ class _TelaLoginState extends State<TelaLogin> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     // Cor do spinner quando desabilitado
-                    disabledBackgroundColor: buttonBlue.withOpacity(0.6), 
+                    disabledBackgroundColor: buttonBlue.withOpacity(0.6),
                   ),
-                  
+
                   // Aqui está a mágica visual:
                   child: _isLoading
                       ? const SizedBox(
@@ -189,7 +197,8 @@ class _TelaLoginState extends State<TelaLogin> {
                             strokeWidth: 2,
                           ),
                         )
-                      : const Text( // O texto original que você tinha
+                      : const Text(
+                          // O texto original que você tinha
                           'Entrar',
                           style: TextStyle(
                             color: Colors.white,
@@ -218,7 +227,10 @@ class _TelaLoginState extends State<TelaLogin> {
                     Expanded(child: Divider(color: Colors.white30)),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text('OU', style: TextStyle(color: Colors.white70)),
+                      child: Text(
+                        'OU',
+                        style: TextStyle(color: Colors.white70),
+                      ),
                     ),
                     Expanded(child: Divider(color: Colors.white30)),
                   ],
@@ -231,7 +243,7 @@ class _TelaLoginState extends State<TelaLogin> {
                     // Lógica de login com Google
                   },
                   icon: Image.asset(
-                    'assets/google_logo.png', // <-- VOCÊ PRECISA ADICIONAR ESSA IMAGEM
+                    'assets/images/google_logo.png',
                     height: 24.0,
                     // Para este exemplo, usei um placeholder.
                     // Substitua por um ícone real ou imagem.
@@ -271,7 +283,8 @@ class _TelaLoginState extends State<TelaLogin> {
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero, // Remove padding extra
                         minimumSize: Size.zero, // Remove tamanho mínimo
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap, // Ajusta área de clique
+                        tapTargetSize: MaterialTapTargetSize
+                            .shrinkWrap, // Ajusta área de clique
                       ),
                       child: const Text(
                         'Cadastre-se',

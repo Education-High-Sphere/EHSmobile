@@ -8,12 +8,14 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Supabase.initialize(
-    url: 'https://exemplo-falso.supabase.co',
-    anonKey: 'SUA_ANON_KEY_DO_SUPABASE',
+    url: 'https://pqlpyxpgrrzuovgldrgw.supabase.co/',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBxbHB5eHBncnJ6dW92Z2xkcmd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk4NDIwNjksImV4cCI6MjA3NTQxODA2OX0.mfuaZ6JAIBBKrCkM2PmxwW7qSOkaZ-sgyzHRv2wmQNE',
   );
 
   runApp(const EHSMobileApp());
 }
+
 class EHSMobileApp extends StatelessWidget {
   const EHSMobileApp({super.key});
 
@@ -22,17 +24,19 @@ class EHSMobileApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'EHS Mobile',
-      // Você pode definir um tema padrão aqui se quiser, 
+      // Você pode definir um tema padrão aqui se quiser,
       // mas a TelaHome já tem as cores definidas nela mesma.
       theme: ThemeData(
-        brightness: Brightness.light, // Mudei para Light para bater com o design azul/branco
+        brightness: Brightness
+            .light, // Mudei para Light para bater com o design azul/branco
         primarySwatch: Colors.blue,
       ),
       initialRoute: '/login',
       routes: {
         '/login': (ctx) => const TelaLogin(),
         '/cadastro': (ctx) => const TelaCadastro(),
-        '/home': (ctx) => const TelaHome(), // A rota já estava certa, agora ela encontra a classe
+        '/home': (ctx) =>
+            const TelaHome(), // A rota já estava certa, agora ela encontra a classe
       },
     );
   }

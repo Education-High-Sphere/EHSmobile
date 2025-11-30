@@ -7,7 +7,8 @@ class TelaHome extends StatefulWidget {
   State<TelaHome> createState() => _TelaHomeState();
 }
 
-class _TelaHomeState extends State<TelaHome> with SingleTickerProviderStateMixin {
+class _TelaHomeState extends State<TelaHome>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   late TabController _tabController;
 
@@ -33,7 +34,7 @@ class _TelaHomeState extends State<TelaHome> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     return Scaffold(
       // Movi a cor que estava no theme do seu código antigo para cá
-      backgroundColor: const Color.fromARGB(255, 87, 153, 240), 
+      backgroundColor: const Color.fromARGB(255, 87, 153, 240),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -57,10 +58,7 @@ class _TelaHomeState extends State<TelaHome> with SingleTickerProviderStateMixin
             icon: Icon(Icons.home),
             label: 'Tela Inicial',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Catálogo',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Catálogo'),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             label: 'Meu perfil',
@@ -83,10 +81,18 @@ class _TelaHomeState extends State<TelaHome> with SingleTickerProviderStateMixin
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Icon(Icons.menu, size: 30, color: Colors.white), // Adicionei cor branca para contraste
+          const Icon(
+            Icons.menu,
+            size: 30,
+            color: Colors.white,
+          ), // Adicionei cor branca para contraste
           Text(
             'Boas vindas, Nicholas',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontSize: 18,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const Icon(Icons.settings_outlined, size: 30, color: Colors.white),
         ],
@@ -108,7 +114,11 @@ class _TelaHomeState extends State<TelaHome> with SingleTickerProviderStateMixin
             const CircleAvatar(
               radius: 30,
               backgroundColor: Colors.white,
-              child: Icon(Icons.person, size: 30, color: Color.fromARGB(255, 6, 88, 194)),
+              child: Icon(
+                Icons.person,
+                size: 30,
+                color: Color.fromARGB(255, 6, 88, 194),
+              ),
             ),
             const SizedBox(width: 15),
             Column(
@@ -116,12 +126,20 @@ class _TelaHomeState extends State<TelaHome> with SingleTickerProviderStateMixin
               children: [
                 Text(
                   'Nicholas Wang',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
                 ),
                 const SizedBox(height: 5),
                 Row(
                   children: [
-                    Icon(Icons.workspace_premium_outlined, color: Colors.grey[700], size: 20),
+                    Icon(
+                      Icons.workspace_premium_outlined,
+                      color: Colors.grey[700],
+                      size: 20,
+                    ),
                     const SizedBox(width: 5),
                     Text(
                       '28 Certificados',
@@ -142,7 +160,11 @@ class _TelaHomeState extends State<TelaHome> with SingleTickerProviderStateMixin
       padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 16.0),
       child: Text(
         title,
-        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -152,15 +174,17 @@ class _TelaHomeState extends State<TelaHome> with SingleTickerProviderStateMixin
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Card(
         elevation: 2.0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
         clipBehavior: Clip.antiAlias,
         child: Row(
           children: [
             // Placeholder para imagem
             Container(
-              width: 130, 
-              height: 140, 
-              color: Colors.grey[300], 
+              width: 130,
+              height: 140,
+              color: Colors.grey[300],
               child: const Icon(Icons.image, size: 50, color: Colors.grey),
             ),
             Expanded(
@@ -179,7 +203,9 @@ class _TelaHomeState extends State<TelaHome> with SingleTickerProviderStateMixin
                       child: LinearProgressIndicator(
                         value: 0.7,
                         backgroundColor: Colors.grey[300],
-                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                          Colors.blue,
+                        ),
                         minHeight: 6,
                       ),
                     ),
@@ -195,9 +221,12 @@ class _TelaHomeState extends State<TelaHome> with SingleTickerProviderStateMixin
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromARGB(255, 30, 64, 114),
-                        foregroundColor: Colors.white, // Ajustei texto para branco para ler melhor
+                        foregroundColor: Colors
+                            .white, // Ajustei texto para branco para ler melhor
                         elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                       ),
                       child: const Text('Continuar aula'),
                     ),
@@ -236,21 +265,27 @@ class _TelaHomeState extends State<TelaHome> with SingleTickerProviderStateMixin
     );
   }
 
-  Widget _buildRecommendationCard(BuildContext context, String title, String author) {
+  Widget _buildRecommendationCard(
+    BuildContext context,
+    String title,
+    String author,
+  ) {
     return Container(
       width: 200,
       margin: const EdgeInsets.only(right: 16.0),
       child: Card(
         elevation: 2.0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
         clipBehavior: Clip.antiAlias,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             Container(
-              width: 200, 
-              height: 100, 
-              color: Colors.grey[300], 
+            Container(
+              width: 200,
+              height: 100,
+              color: Colors.grey[300],
               child: const Icon(Icons.code, color: Colors.grey),
             ),
             Padding(
@@ -260,7 +295,10 @@ class _TelaHomeState extends State<TelaHome> with SingleTickerProviderStateMixin
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -274,10 +312,20 @@ class _TelaHomeState extends State<TelaHome> with SingleTickerProviderStateMixin
                     children: [
                       Text(
                         '5,0',
-                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange[800]),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange[800],
+                        ),
                       ),
                       const SizedBox(width: 4),
-                      ...List.generate(5, (i) => Icon(Icons.star, color: Colors.amber[600], size: 16)),
+                      ...List.generate(
+                        5,
+                        (i) => Icon(
+                          Icons.star,
+                          color: Colors.amber[600],
+                          size: 16,
+                        ),
+                      ),
                     ],
                   ),
                 ],
