@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TelaHome extends StatefulWidget {
   const TelaHome({super.key});
@@ -12,11 +13,59 @@ class _TelaHomeState extends State<TelaHome>
   int _selectedIndex = 0;
   late TabController _tabController;
 
+
+  String _nomeUsuario = 'Carregando...';
+  String _emailUsuario = '';
+  int _certificados = 0;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _carregarDadosUsuario();
   }
+
+  Future<void> _carregarDadosUsuario() async {
+    final supabase = Supabase.instance.client;
+
+    final user = supabase.auth.currentUser;
+
+    if (user != null) {
+      setState(() {
+        _emailUsuario = user.email ?? '';
+      });
+    }
+
+    try {
+        // Busca dados extras na tabela 'profiles' usando o ID do usuário
+        final data = await supabase
+            .from('profiles')
+            .select()
+            .eq('id', user!.id)
+            .single(); // .single() pois esperamos apenas 1 perfil
+
+        setState(() {
+          _nomeUsuario = data['full_name'] ?? 'Usuário Sem Nome';
+          _certificados = data['certificados'] ?? 0;
+        });
+      } catch (e) {
+        // Se der erro (ex: tabela vazia), usa o email como nome provisório
+        setState(() {
+          _nomeUsuario = _emailUsuario.split('@')[0]; 
+        });
+        print('Erro ao carregar perfil: $e');
+      }
+
+  }
+
+  // Dentro da _TelaHomeState
+Future<void> _fazerLogout() async {
+  await Supabase.instance.client.auth.signOut();
+  if (mounted) {
+    // Remove todo histórico e volta pro Login
+    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+  }
+}
 
   @override
   void dispose() {
@@ -87,7 +136,7 @@ class _TelaHomeState extends State<TelaHome>
             color: Colors.white,
           ), // Adicionei cor branca para contraste
           Text(
-            'Boas vindas, Nicholas',
+            'Boas vindas, $_nomeUsuario',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               fontSize: 18,
               color: Colors.white,
@@ -95,6 +144,12 @@ class _TelaHomeState extends State<TelaHome>
             ),
           ),
           const Icon(Icons.settings_outlined, size: 30, color: Colors.white),
+          
+// No seu _buildTopBar, adicione o onPressed no ícone:
+          IconButton(
+           icon: const Icon(Icons.logout, size: 30), // Mudei para ícone de sair
+            onPressed: _fazerLogout,
+            ),
         ],
       ),
     );
@@ -125,7 +180,7 @@ class _TelaHomeState extends State<TelaHome>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Nicholas Wang',
+                  _nomeUsuario,
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -142,7 +197,7 @@ class _TelaHomeState extends State<TelaHome>
                     ),
                     const SizedBox(width: 5),
                     Text(
-                      '28 Certificados',
+                      '$_certificados Certificados',
                       style: const TextStyle(color: Colors.black54),
                     ),
                   ],
