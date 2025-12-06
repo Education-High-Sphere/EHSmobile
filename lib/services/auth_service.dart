@@ -19,14 +19,35 @@ class AuthService {
     }
   }
 
-  // Método de Cadastro (bônus)
-  Future<String?> cadastro(String email, String password) async {
+  Future<String?> cadastro({
+    required String email, 
+    required String password, 
+    required String nome
+  }) async {
     try {
-      await _supabase.auth.signUp(
+      // 1. Cria o usuário na Autenticação (Auth)
+      final AuthResponse res = await _supabase.auth.signUp(
         email: email,
         password: password,
       );
-      return null;
+
+      // 2. Se criou com sucesso, salva o nome na tabela 'profiles' (Database)
+if (res.user != null) {
+  await _supabase.from('users').insert({
+    // ❌ APAGUE OU COMENTE ESTA LINHA:
+    // 'id': res.user!.id,  <-- É ISSO QUE ESTÁ QUEBRANDO O APP!
+    
+    // ✅ MANTENHA SÓ O RESTO:
+    'name': nome,
+    'email': email,
+    'roles': ['student'] 
+    
+    // O QUE VAI ACONTECER:
+    // O banco vai gerar o ID numérico sozinho (ex: 8, 9, 10...)
+    // O cadastro vai funcionar e você vai conseguir entrar no app.
+  });
+}
+      return null; // Sucesso, sem erro
     } on AuthException catch (e) {
       return e.message;
     } catch (e) {
