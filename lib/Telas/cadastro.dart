@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TelaCadastro extends StatefulWidget {
 	const TelaCadastro({super.key});
@@ -58,6 +59,46 @@ class _TelaCadastroState extends State<TelaCadastro> {
 		final trimmed = value.trim();
 		if (phoneReg.stringMatch(trimmed) != trimmed) return 'Telefone inválido';
 		return null;
+	}
+
+	Future<void> _registerUser() async {
+		final email = _emailController.text.trim();
+		final password = _passwordController.text;
+
+		try {
+			final response = await Supabase.instance.client.auth.signUp(
+				email: email,
+				password: password,
+			);
+
+			if (response.user != null) {
+				ScaffoldMessenger.of(context).showSnackBar(
+					const SnackBar(content: Text('Cadastro realizado com sucesso!')),
+				);
+				Navigator.pop(context);
+			} else {
+				// Quando a API não retorna um usuário, tratamos como falha genérica.
+				ScaffoldMessenger.of(context).showSnackBar(
+					const SnackBar(content: Text('Não foi possível concluir o cadastro. Verifique os dados.')),
+				);
+			}
+		} on AuthException catch (error) {
+			// Mensagem específica quando o email já existe no Supabase
+			final msg = error.message.toLowerCase();
+			if (msg.contains('already registered') || msg.contains('user already registered') || msg.contains('duplicate') || msg.contains('already exists')) {
+				ScaffoldMessenger.of(context).showSnackBar(
+					const SnackBar(content: Text('O email já está cadastrado.')),
+				);
+			} else {
+				ScaffoldMessenger.of(context).showSnackBar(
+					SnackBar(content: Text('Erro ao cadastrar: ${error.message}')),
+				);
+			}
+		} catch (e) {
+			ScaffoldMessenger.of(context).showSnackBar(
+				SnackBar(content: Text('Erro ao cadastrar: $e')),
+			);
+		}
 	}
 
 	@override
@@ -220,8 +261,7 @@ class _TelaCadastroState extends State<TelaCadastro> {
 									ElevatedButton(
 										onPressed: () {
 											if (_formKey.currentState?.validate() ?? false) {
-												// Lógica de cadastro aqui
-												Navigator.pop(context);
+												_registerUser();
 											}
 										},
 										style: ElevatedButton.styleFrom(
